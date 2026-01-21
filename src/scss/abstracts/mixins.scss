@@ -1,0 +1,353 @@
+@use 'sass:color';
+@use './variables' as *;
+
+@mixin sm {
+    @media (min-width: #{$breakpoint-sm}) {
+      @content;
+    }
+  }
+  
+  @mixin md {
+    @media (min-width: #{$breakpoint-md}) {
+      @content;
+    }
+  }
+  
+  @mixin lg {
+    @media (min-width: #{$breakpoint-lg}) {
+      @content;
+    }
+  }
+  
+  @mixin xl {
+    @media (min-width: #{$breakpoint-xl}) {
+      @content;
+    }
+  }
+  
+  @mixin xxl {
+    @media (min-width: #{$breakpoint-2xl}) {
+      @content;
+    }
+  }
+  
+  // Flexbox shortcuts
+  @mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  @mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  @mixin flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  @mixin flex-col-center {
+    @include flex-col;
+    align-items: center;
+  }
+
+  @mixin grid($columns: 1, $gap: $spacing-4) {
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    gap: $gap;
+  }
+  
+  // Container
+  @mixin container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 $spacing-4;
+  
+    @include sm {
+      max-width: $breakpoint-sm;
+    }
+  
+    @include md {
+      max-width: $breakpoint-md;
+    }
+  
+    @include lg {
+      max-width: $breakpoint-lg;
+      padding: 0 $spacing-6;
+    }
+  
+    @include xl {
+      max-width: $breakpoint-xl;
+      padding: 0 $spacing-8;
+    }
+  
+    @include xxl {
+      max-width: $breakpoint-2xl;
+    }
+  }
+  
+  // Button base styles
+  @mixin button-base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-2 $spacing-4;
+    border-radius: $border-radius-md;
+    font-weight: $font-weight-medium;
+    font-size: $text-base;
+    line-height: $line-height-normal;
+    transition: all $transition-base $transition-timing;
+    cursor: pointer;
+    border: none;
+    outline: none;
+  
+    &:focus-visible {
+      outline: 2px solid $color-primary;
+      outline-offset: 2px;
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  // Card base styles
+@mixin card-base {
+    background: linear-gradient(145deg, $color-bg-card, color.adjust($color-bg-card, $lightness: -5%));
+    border: 1px solid $color-border-light;
+    border-radius: $border-radius-lg;
+    transition: all $transition-base $transition-timing;
+  
+    &:hover {
+      transform: translateY(-4px);
+      border-color: rgba($color-primary, 0.3);
+      box-shadow: $shadow-card-hover;
+    }
+}
+
+@mixin project-card-base {
+  @include card-base;
+  
+  &:hover {
+      box-shadow: 0 20px 25px -5px rgba($color-primary, 0.1);
+      transform: translateY(-0.5rem);
+      border-color: $color-primary;
+  }
+}
+
+@mixin button-primary {
+  @include button-base;
+  background-color: $color-primary;
+  color: $color-bg-primary;
+  
+  &:hover:not(:disabled) {
+    background-color: color.adjust($color-primary, $lightness: -10%);
+  }
+  
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.3);
+  }
+}
+
+@mixin button-outline {
+  @include button-base;
+  background-color: transparent;
+  border-color: $color-border;
+  color: $color-text-primary;
+  
+  &:hover:not(:disabled) {
+    background-color: rgba($color-bg-secondary, 0.3);
+  }
+}
+
+@mixin nav-link-base {
+    @include button-base;
+    padding: $spacing-2 $spacing-3;
+    border-radius: $border-radius-md;
+    font-weight: $font-weight-medium;
+    font-size: $text-sm;
+    background: transparent;
+    color: $color-text-primary;
+    border: none;
+}
+
+@mixin nav-link-active {
+  background-color: $color-primary;
+  color: $color-bg-primary;
+  font-weight: $font-weight-bold;
+  
+  &:hover {
+      background-color: color.adjust($color-primary, $lightness: -10%);
+  }
+}
+
+@mixin footer-base {
+    padding: $spacing-12 $spacing-4;
+    background-color: $color-bg-secondary;
+    border-top: 1px solid $color-border;
+    margin-top: auto;
+}
+
+@mixin form-input-base {
+  background-color: $color-bg-input;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-md;
+  padding: $spacing-2 $spacing-3;
+  color: $color-text-primary;
+  font-size: $text-sm;
+  transition: border-color $transition-fast $transition-timing;
+  width: 100%;
+  
+  &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+  
+  &::placeholder {
+      color: $color-text-secondary;
+  }
+}
+
+@mixin form-input-error {
+  border-color: $color-danger;
+  
+  &:focus {
+      border-color: $color-danger;
+      box-shadow: 0 0 0 3px rgba($color-danger, 0.1);
+  }
+}
+  
+  // Typography mixins
+  @mixin heading-1 {
+    font-size: $text-4xl;
+    font-weight: $font-weight-bold;
+    line-height: $line-height-tight;
+    
+    @include lg {
+      font-size: $text-5xl;
+    }
+  }
+  
+  @mixin heading-2 {
+    font-size: $text-3xl;
+    font-weight: $font-weight-semibold;
+    line-height: $line-height-tight;
+    
+    @include lg {
+      font-size: $text-4xl;
+    }
+  }
+  
+  @mixin heading-3 {
+    font-size: $text-2xl;
+    font-weight: $font-weight-semibold;
+    line-height: $line-height-normal;
+  }
+  
+  @mixin heading-4 {
+    font-size: $text-xl;
+    font-weight: $font-weight-semibold;
+    line-height: $line-height-normal;
+  }
+  
+  // Gradient backgrounds
+  @mixin gradient-primary {
+    background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+  }
+  
+  @mixin gradient-success {
+    background: linear-gradient(135deg, $color-success, $color-success-dark);
+  }
+  
+  @mixin gradient-accent {
+    background: linear-gradient(135deg, $color-accent, color.adjust($color-accent, $lightness: -15%));
+  }
+  
+  // Glass morphism effect
+  @mixin glass-effect {
+    background: rgba($color-bg-secondary, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+
+// ===== BEM (Block Element Modifier) HELPERS =====
+
+// Block - The root of the component
+@mixin block($name) {
+    .#{$name} {
+      @content;
+    }
+  }
+  
+  // Element - A child of the block
+  @mixin element($name) {
+    &__#{$name} {
+      @content;
+    }
+  }
+  
+  // Modifier - A variation of the block or element
+  @mixin modifier($name) {
+    &--#{$name} {
+      @content;
+    }
+  }
+  
+  // Component wrapper for scoping
+  @mixin component($name) {
+    .#{$name} {
+      @content;
+    }
+  }
+  
+  // ===== BEM SHORTHAND MIXINS =====
+  
+  // Quick BEM element
+  @mixin e($name) {
+    @include element($name) {
+      @content;
+    }
+  }
+  
+  // Quick BEM modifier
+  @mixin m($name) {
+    @include modifier($name) {
+      @content;
+    }
+  }
+  
+  // ===== COMPONENT SCOPING =====
+  
+  // Generates unique class names for component scoping
+  @function scoped-class($component, $element: null, $modifier: null) {
+    $class: $component;
+    
+    @if $element {
+      $class: #{$class}__#{$element};
+    }
+    
+    @if $modifier {
+      $class: #{$class}--#{$modifier};
+    }
+    
+    @return $class;
+  }
+  
+  // ===== RESPONSIVE BEM MODIFIERS =====
+  
+  // Creates responsive modifier classes (e.g., .component--md)
+  @mixin responsive-modifiers($breakpoints: ()) {
+    @each $breakpoint, $value in $breakpoints {
+      @media (min-width: $value) {
+        &--#{$breakpoint} {
+          @content;
+        }
+      }
+    }
+  }
