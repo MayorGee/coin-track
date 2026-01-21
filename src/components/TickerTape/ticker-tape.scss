@@ -1,0 +1,100 @@
+@use '../../scss/abstracts/variables' as *;
+@use '../../scss/abstracts/mixins' as *;
+
+.ticker-tape {
+    background-color: $color-bg-dark;
+    border-top: 1px solid $color-bg-border;
+    overflow: hidden;
+    width: 100%;
+
+    &__container {
+        display: flex;
+        white-space: nowrap;
+        padding: 0.75rem 0;
+        width: max-content;
+        animation-play-state: running;
+        
+        &:hover {
+            animation-play-state: paused;
+        }
+    }
+
+    &__item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0 1.5rem;
+        border-right: 1px solid $color-bg-border;
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    &__logo {
+        font-size: 1.125rem;
+        line-height: 1;
+        color: $color-text-secondary;
+    }
+
+    &__info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    &__symbol {
+        font-weight: 600;
+        color: $color-text-primary;
+        font-size: 0.875rem;
+        min-width: 2.5rem;
+    }
+
+    &__price {
+        color: $color-text-secondary;
+        font-size: 0.875rem;
+        min-width: 4rem;
+    }
+
+    &__change {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        min-width: 4rem;
+
+        &--positive {
+            color: $color-success;
+        }
+
+        &--negative {
+            color: $color-error;
+        }
+    }
+
+    &__change-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+}
+
+// Animation for the ticker tape
+@keyframes ticker-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+// Apply animation if JavaScript fails/disabled
+.ticker-tape__container {
+    animation: ticker-scroll 60s linear infinite;
+}
+
+// Pause animation on hover
+.ticker-tape__container:hover {
+    animation-play-state: paused;
+}

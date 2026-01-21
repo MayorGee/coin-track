@@ -1,253 +1,52 @@
-// utils/index.scss - FIXED VERSION
 @use '../abstracts/variables.scss' as *;
 @use '../abstracts/mixins.scss' as *;
 
-// ===== LAYOUT UTILITIES =====
-
 // Display
-.util-display-block { display: block; }
-.util-display-inline { display: inline; }
-.util-display-inline-block { display: inline-block; }
-.util-display-flex { display: flex; }
-.util-display-grid { display: grid; }
-.util-display-none { display: none; }
-.util-display-hidden { display: none; }
-
-// Flex utilities
+.util-hidden { display: none; }
+.util-block { display: block; }
 .util-flex { display: flex; }
-.util-flex-col { flex-direction: column; }
-.util-flex-row { flex-direction: row; }
-.util-flex-wrap { flex-wrap: wrap; }
-.util-flex-nowrap { flex-wrap: nowrap; }
-.util-justify-start { justify-content: flex-start; }
-.util-justify-center { justify-content: center; }
-.util-justify-end { justify-content: flex-end; }
-.util-justify-between { justify-content: space-between; }
-.util-justify-around { justify-content: space-around; }
-.util-items-start { align-items: flex-start; }
-.util-items-center { align-items: center; }
-.util-items-end { align-items: flex-end; }
-.util-items-stretch { align-items: stretch; }
-.util-self-start { align-self: flex-start; }
-.util-self-center { align-self: center; }
-.util-self-end { align-self: flex-end; }
-
-// Grid utilities
 .util-grid { display: grid; }
-.util-grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
-.util-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-.util-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-.util-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
 
-// Gap utilities - FIXED
-.util-gap-1 { gap: $spacing-1; }
-.util-gap-2 { gap: $spacing-2; }
-.util-gap-3 { gap: $spacing-3; }
-.util-gap-4 { gap: $spacing-4; }
-.util-gap-6 { gap: $spacing-6; }
-.util-gap-8 { gap: $spacing-8; }
+// Flexbox shortcuts
+.util-flex-center {
+  @include flex-center;
+}
 
-// ===== SPACING UTILITIES =====
+.util-flex-between {
+  @include flex-between;
+}
 
-// Margin - FIXED
+// Spacing shortcuts
 .util-m-0 { margin: 0; }
-.util-m-1 { margin: $spacing-1; }
-.util-m-2 { margin: $spacing-2; }
-.util-m-4 { margin: $spacing-4; }
-.util-m-6 { margin: $spacing-6; }
-.util-m-auto { margin: auto; }
-
-.util-mt-0 { margin-top: 0; }
-.util-mt-2 { margin-top: $spacing-2; }
-.util-mt-4 { margin-top: $spacing-4; }
-.util-mt-6 { margin-top: $spacing-6; }
-.util-mt-8 { margin-top: $spacing-8; }
-
-.util-mb-0 { margin-bottom: 0; }
-.util-mb-2 { margin-bottom: $spacing-2; }
-.util-mb-4 { margin-bottom: $spacing-4; }
-.util-mb-6 { margin-bottom: $spacing-6; }
-.util-mb-8 { margin-bottom: $spacing-8; }
-
-.util-mx-auto { margin-left: auto; margin-right: auto; }
-
-// Padding - FIXED
 .util-p-0 { padding: 0; }
-.util-p-1 { padding: $spacing-1; }
-.util-p-2 { padding: $spacing-2; }
-.util-p-4 { padding: $spacing-4; }
-.util-p-6 { padding: $spacing-6; }
-.util-p-8 { padding: $spacing-8; }
 
-.util-pt-0 { padding-top: 0; }
-.util-pt-4 { padding-top: $spacing-4; }
-.util-pt-6 { padding-top: $spacing-6; }
-.util-pt-8 { padding-top: $spacing-8; }
+.util-mt-4 { margin-top: $spacing-4; }
+.util-mb-4 { margin-bottom: $spacing-4; }
+.util-mt-6 { margin-top: $spacing-6; }
+.util-mb-6 { margin-bottom: $spacing-6; }
 
-.util-pb-0 { padding-bottom: 0; }
-.util-pb-4 { padding-bottom: $spacing-4; }
-.util-pb-6 { padding-bottom: $spacing-6; }
-.util-pb-8 { padding-bottom: $spacing-8; }
-
-.util-px-0 { padding-left: 0; padding-right: 0; }
-.util-px-4 { padding-left: $spacing-4; padding-right: $spacing-4; }
-.util-px-6 { padding-left: $spacing-6; padding-right: $spacing-6; }
-
-.util-py-0 { padding-top: 0; padding-bottom: 0; }
-.util-py-4 { padding-top: $spacing-4; padding-bottom: $spacing-4; }
-.util-py-6 { padding-top: $spacing-6; padding-bottom: $spacing-6; }
-
-// ===== TYPOGRAPHY UTILITIES =====
-
-.util-text-xs { font-size: $text-xs; }
-.util-text-sm { font-size: $text-sm; }
-.util-text-base { font-size: $text-base; }
-.util-text-lg { font-size: $text-lg; }
-.util-text-xl { font-size: $text-xl; }
-.util-text-2xl { font-size: $text-2xl; }
-.util-text-3xl { font-size: $text-3xl; }
-
-.util-font-light { font-weight: 300; }
-.util-font-normal { font-weight: $font-weight-normal; }
-.util-font-medium { font-weight: $font-weight-medium; }
-.util-font-semibold { font-weight: $font-weight-semibold; }
-.util-font-bold { font-weight: $font-weight-bold; }
-
-.util-text-left { text-align: left; }
+// Text
 .util-text-center { text-align: center; }
 .util-text-right { text-align: right; }
 
 .util-text-primary { color: $color-text-primary; }
 .util-text-secondary { color: $color-text-secondary; }
-.util-text-muted { color: $color-text-muted; }
-.util-text-success { color: $color-success; }
-.util-text-warning { color: $color-warning; }
-.util-text-danger { color: $color-danger; }
-.util-text-accent { color: $color-accent; }
 
-.util-leading-tight { line-height: $line-height-tight; }
-.util-leading-normal { line-height: $line-height-normal; }
-.util-leading-relaxed { line-height: $line-height-relaxed; }
-
-// Text decoration
-.util-underline { text-decoration: underline; }
-.util-no-underline { text-decoration: none; }
-
-// Text transform
-.util-uppercase { text-transform: uppercase; }
-.util-lowercase { text-transform: lowercase; }
-.util-capitalize { text-transform: capitalize; }
-
-// ===== VISIBILITY & LAYER UTILITIES =====
-
-.util-visible { visibility: visible; }
-.util-invisible { visibility: hidden; }
-
-.util-z-0 { z-index: 0; }
-.util-z-10 { z-index: 10; }
-.util-z-20 { z-index: 20; }
-.util-z-30 { z-index: 30; }
-.util-z-40 { z-index: 40; }
-.util-z-50 { z-index: 50; }
-
-// ===== BORDER UTILITIES =====
-
-.util-border-0 { border: 0; }
-.util-border { border: 1px solid $color-border; }
-.util-border-t { border-top: 1px solid $color-border; }
-.util-border-b { border-bottom: 1px solid $color-border; }
-
-.util-rounded-none { border-radius: 0; }
-.util-rounded-sm { border-radius: $border-radius-sm; }
-.util-rounded-md { border-radius: $border-radius-md; }
-.util-rounded-lg { border-radius: $border-radius-lg; }
-.util-rounded-full { border-radius: $border-radius-full; }
-
-// ===== WIDTH & HEIGHT UTILITIES =====
-
-.util-w-full { width: 100%; }
-.util-w-screen { width: 100vw; }
-.util-w-auto { width: auto; }
-
-.util-h-full { height: 100%; }
-.util-h-screen { height: 100vh; }
-.util-h-auto { height: auto; }
-
-.util-min-h-screen { min-height: 100vh; }
-
-// ===== POSITIONING UTILITIES =====
-
-.util-relative { position: relative; }
-.util-absolute { position: absolute; }
-.util-fixed { position: fixed; }
-.util-sticky { position: sticky; }
-
-.util-top-0 { top: 0; }
-.util-right-0 { right: 0; }
-.util-bottom-0 { bottom: 0; }
-.util-left-0 { left: 0; }
-
-// ===== BACKGROUND UTILITIES =====
-
-.util-bg-transparent { background-color: transparent; }
-.util-bg-primary { background-color: $color-bg-primary; }
-.util-bg-secondary { background-color: $color-bg-secondary; }
-.util-bg-card { background-color: $color-bg-card; }
-
-// ===== OPACITY UTILITIES =====
-
-.util-opacity-0 { opacity: 0; }
-.util-opacity-50 { opacity: 0.5; }
-.util-opacity-100 { opacity: 1; }
-
-// ===== CURSOR UTILITIES =====
-
-.util-cursor-pointer { cursor: pointer; }
-.util-cursor-default { cursor: default; }
-.util-cursor-not-allowed { cursor: not-allowed; }
-
-// ===== OVERFLOW UTILITIES =====
-
-.util-overflow-hidden { overflow: hidden; }
-.util-overflow-auto { overflow: auto; }
-.util-overflow-x-auto { overflow-x: auto; }
-.util-overflow-y-auto { overflow-y: auto; }
-
-// ===== TEXT OVERFLOW UTILITIES =====
-
-.util-truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+// Visibility
+.util-visually-hidden {
+  @include visually-hidden;
 }
 
-.util-text-ellipsis {
-  text-overflow: ellipsis;
-}
-
-// ===== SHADOW UTILITIES =====
-
-.util-shadow-none { box-shadow: none; }
-.util-shadow-sm { box-shadow: $shadow-sm; }
-.util-shadow-md { box-shadow: $shadow-md; }
-.util-shadow-lg { box-shadow: $shadow-lg; }
-
-// ===== TRANSITION UTILITIES =====
-
-.util-transition-all {
-  transition: all $transition-base $transition-timing;
-}
-
-.util-transition-colors {
-  transition: color $transition-base $transition-timing, 
-              background-color $transition-base $transition-timing,
-              border-color $transition-base $transition-timing;
-}
-
-// ===== PRINT UTILITIES =====
-
-.util-print-hidden {
-  @media print {
+// Responsive utilities
+.util-mobile-only {
+  @include respond-to('medium') {
     display: none;
+  }
+}
+
+.util-desktop-only {
+  display: none;
+  @include min-width('large') {
+    display: block;
   }
 }
