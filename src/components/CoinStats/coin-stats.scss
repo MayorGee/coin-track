@@ -1,0 +1,208 @@
+@use '../../scss/abstracts/variables' as *;
+@use '../../scss/abstracts/mixins' as *;
+
+.coin-stats {
+    background-color: $color-bg-dark;
+    border: 1px solid $color-bg-border;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    width: 100%;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    &__logo {
+        width: 3rem;
+        height: 3rem;
+        background-color: $color-bg-border;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    &__titles {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+    }
+
+    &__name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $color-text-primary;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    &__symbol {
+        font-size: 0.875rem;
+        color: $color-text-secondary;
+        margin: 0;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__card {
+        background-color: rgba(30, 41, 59, 0.5);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: rgba(30, 41, 59, 0.7);
+        }
+    }
+
+    &__card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    &__card-label {
+        font-size: 0.875rem;
+        color: $color-text-secondary;
+    }
+
+    &__card-icon {
+        width: 1rem;
+        height: 1rem;
+
+        &--primary {
+            color: $color-primary;
+        }
+
+        &--secondary {
+            color: $color-secondary;
+        }
+    }
+
+    &__card-value {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: $color-text-primary;
+        margin: 0;
+
+        &--large {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+    }
+
+    &__change {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-top: 0.25rem;
+
+        &--positive {
+            color: $color-success;
+        }
+
+        &--negative {
+            color: $color-error;
+        }
+    }
+
+    &__change-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    &__high-low {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    &__high,
+    &__low {
+        background-color: rgba(30, 41, 59, 0.5);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: rgba(30, 41, 59, 0.7);
+        }
+    }
+
+    &__high-label,
+    &__low-label {
+        font-size: 0.75rem;
+        color: $color-text-secondary;
+        margin-bottom: 0.25rem;
+    }
+
+    &__high-value,
+    &__low-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: $color-text-primary;
+        margin: 0;
+    }
+
+    &__ath-percentage {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 0.25rem;
+        margin-bottom: 0;
+    }
+
+    &__actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+
+    &__btn {
+        padding: 0.75rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.875rem;
+
+        &--buy {
+            background-color: $color-success;
+            color: $color-bg-dark;
+
+            &:hover {
+                background-color: darken($color-success, 10%);
+            }
+        }
+
+        &--sell {
+            background-color: $color-error;
+            color: white;
+
+            &:hover {
+                background-color: darken($color-error, 10%);
+            }
+        }
+    }
+
+    &__disclaimer {
+        font-size: 0.75rem;
+        color: #64748b;
+        text-align: center;
+        margin-top: 0.5rem;
+        margin-bottom: 0;
+    }
+}

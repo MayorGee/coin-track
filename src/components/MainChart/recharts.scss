@@ -1,0 +1,83 @@
+@use '../../scss/abstracts/variables' as *;
+
+// .recharts-area-chart,
+// .recharts-bar-chart {
+//     // Container styles
+// }
+
+.recharts-cartesian-grid {
+    stroke: $chart-grid;
+    stroke-dasharray: 3 3;
+}
+
+.recharts-xaxis,
+.recharts-yaxis {
+    .recharts-cartesian-axis-line {
+        stroke: $chart-axis;
+    }
+
+    .recharts-cartesian-axis-tick-line {
+        display: none;
+    }
+
+    .recharts-cartesian-axis-tick-value {
+        fill: $chart-axis;
+        font-size: 12px;
+    }
+}
+
+.recharts-area {
+    stroke-width: $recharts-stroke-width;
+    animation-duration: $recharts-animation-duration;
+
+    &--positive {
+        stroke: $chart-up;
+    }
+
+    &--negative {
+        stroke: $chart-down;
+    }
+}
+
+.recharts-gradient-start {
+    stop-color: $chart-up;
+    stop-opacity: 0.3;
+}
+
+.recharts-area--negative ~ defs .recharts-gradient-start {
+    stop-color: $chart-down;
+}
+
+.recharts-gradient-end {
+    stop-color: $chart-up;
+    stop-opacity: 0;
+}
+
+.recharts-area--negative ~ defs .recharts-gradient-end {
+    stop-color: $chart-down;
+}
+
+.recharts-volume-bar {
+    fill: $chart-volume;
+    opacity: 0.6;
+}
+
+.recharts-tooltip-wrapper {
+    background-color: $chart-tooltip-bg;
+    border: 1px solid $chart-tooltip-border;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-size: 12px;
+
+    .recharts-tooltip-label {
+        color: $chart-tooltip-text;
+        font-size: 11px;
+        margin-bottom: 0.25rem;
+    }
+
+    .recharts-tooltip-item {
+        color: $chart-tooltip-highlight;
+        font-size: 12px;
+        font-weight: 600;
+    }
+}

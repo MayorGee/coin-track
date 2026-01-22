@@ -1,4 +1,42 @@
-// Main SCSS entry point
 @forward 'abstracts';
 @forward 'base';
 @forward 'utils';
+
+// ===== TEMPORARY LAYOUT STYLES =====
+.app {
+    min-height: 100vh;
+    background-color: #0a0f1e;
+    display: flex;
+    flex-direction: column;
+    
+    &__main {
+        flex: 1;
+        padding: 1.5rem;
+    }
+    
+    &__layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+        
+        @media (min-width: 1024px) {
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+    }
+    
+    &__left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    &__right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}

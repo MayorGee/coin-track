@@ -66,6 +66,24 @@ $color-secondary: #8b5cf6;    // Purple for secondary elements
 $color-success: #00ff9d;
 $color-error: #ff4d4d;
 
+// ===== CHART COLORS =====
+$chart-up: #00ff9d;
+$chart-down: #ff4d4d;
+$chart-up-light: rgba(0, 255, 157, 0.3);
+$chart-down-light: rgba(255, 77, 77, 0.3);
+$chart-volume: #3b82f6;
+$chart-grid: #1e293b;
+$chart-axis: #94a3b8;
+$chart-tooltip-bg: #1e293b;
+$chart-tooltip-border: #334155;
+$chart-tooltip-text: #94a3b8;
+$chart-tooltip-highlight: #f8fafc;
+
+
+// Recharts specific
+$recharts-stroke-width: 2;
+$recharts-animation-duration: 300;
+
 // ===== ADDITIONAL COLORS =====
 $color-warning: #f59e0b;
 $color-danger: #ef4444;
