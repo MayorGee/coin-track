@@ -1,0 +1,262 @@
+@use '../../scss/abstracts/variables' as *;
+@use '../../scss/abstracts/mixins' as *;
+
+.crypto-table {
+    background-color: $color-bg-dark;
+    border: 1px solid $color-bg-border;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    width: 100%;
+
+    &__header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid $color-bg-border;
+    }
+
+    &__title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: $color-text-primary;
+        margin: 0;
+    }
+
+    &__container {
+        overflow-x: auto;
+    }
+
+    &__table {
+        width: 100%;
+        min-width: 800px;
+        border-collapse: collapse;
+    }
+
+    &__thead {
+        background-color: rgba(30, 41, 59, 0.5);
+    }
+
+    &__tr {
+        border-bottom: 1px solid $color-bg-border;
+        transition: background-color 0.2s ease;
+
+        &--clickable {
+            cursor: pointer;
+
+            &:hover {
+                background-color: rgba(30, 41, 59, 0.3);
+            }
+        }
+
+        &--selected {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+    }
+
+    &__th {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: $color-text-secondary;
+        text-align: left;
+
+        &--left {
+            text-align: left;
+        }
+
+        &--right {
+            text-align: right;
+        }
+
+        &--center {
+            text-align: center;
+        }
+    }
+
+    &__sort-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        background: none;
+        border: none;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: $color-text-primary;
+        }
+    }
+
+    &__sort-icon {
+        width: 1rem;
+        height: 1rem;
+
+        &--inactive {
+            color: #64748b;
+        }
+
+        &--active {
+            color: $color-primary;
+        }
+    }
+
+    &__actions-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: $color-text-secondary;
+    }
+
+    &__td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+
+        &--right {
+            text-align: right;
+        }
+    }
+
+    &__rank {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $color-text-secondary;
+    }
+
+    &__coin-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    &__coin-logo {
+        width: 2rem;
+        height: 2rem;
+        background-color: $color-bg-border;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        line-height: 1;
+    }
+
+    &__coin-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+    }
+
+    &__coin-name {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $color-text-primary;
+    }
+
+    &__coin-symbol {
+        font-size: 0.75rem;
+        color: $color-text-secondary;
+    }
+
+    &__price {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $color-text-primary;
+    }
+
+    &__change {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+
+        &--positive {
+            color: $color-success;
+        }
+
+        &--negative {
+            color: $color-error;
+        }
+    }
+
+    &__change-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    &__market-cap {
+        font-size: 0.875rem;
+        color: $color-text-primary;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    &__watchlist-btn {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &--inactive {
+            background-color: $color-bg-border;
+            color: $color-text-secondary;
+
+            &:hover {
+                background-color: lighten($color-bg-border, 5%);
+                color: $color-text-primary;
+            }
+        }
+
+        &--active {
+            background-color: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+
+            &:hover {
+                background-color: rgba(251, 191, 36, 0.3);
+            }
+        }
+    }
+
+    &__watchlist-icon {
+        width: 1rem;
+        height: 1rem;
+
+        &--active {
+            fill: currentColor;
+        }
+    }
+
+    &__view-btn {
+        padding: 0.375rem 0.75rem;
+        background-color: $color-primary;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 500;
+        border-radius: 0.375rem;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: darken($color-primary, 10%);
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .crypto-table {
+        &__container {
+            margin: 0 -1rem;
+            width: calc(100% + 2rem);
+        }
+    }
+}

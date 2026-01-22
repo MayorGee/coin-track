@@ -5,6 +5,8 @@ import { Header } from "./components/Header";
 import TickerTape from "./components/TickerTape";
 import MainChart from "./components/MainChart";
 import CoinStats from "./components/CoinStats";
+import CryptoTable from "./components/CryptoTable";
+import Watchlist from "./components/Watchlist";
 
 import './scss/index.scss';
 
@@ -13,12 +15,29 @@ function App() {
     const [selectedCoin, setSelectedCoin] = useState<CryptoData>(generateMockCryptoData()[0]);
     const [isConnected, setIsConnected] = useState(true);
     const [candleData, setCandleData] = useState<CandleData[]>([]);
+    const [watchlist, setWatchlist] = useState<string[]>(['bitcoin', 'ethereum']);
 
     useEffect(() => {
         setCandleData(generateCandleData(selectedCoin.price, 30));
     }, [selectedCoin.id]);
     
     const marketStats = getMarketStats(cryptoData);
+
+    const handleSelectCoin = (coin: CryptoData) => {
+        setSelectedCoin(coin);
+    }
+
+    const handleAddToWatchlist = (coinId: string) => {
+        if (watchlist.includes(coinId)) {
+            setWatchlist(watchlist.filter(id => id !== coinId));
+        } else {
+            setWatchlist([...watchlist, coinId]);
+        }
+    };
+
+    const handleRemoveFromWatchlist = (coinId: string) => {
+        setWatchlist(watchlist.filter(id => id !== coinId));
+    };
     
     return (
         <div className="app">
@@ -37,13 +56,25 @@ function App() {
                             selectedCoin={selectedCoin} 
                             candleData={candleData} 
                         />
-                        {/* CryptoTable will go here later */}
+                        <CryptoTable
+                            cryptoData={cryptoData.slice(0,10)}
+                            onSelectCoin={handleSelectCoin}
+                            selectedCoinId={selectedCoin.id}
+                            onAddToWatchlist={handleAddToWatchlist}
+                            watchlist={watchlist}
+                        />
                     </div>
                     
                     {/* Right Column - Coin Stats */}
                     <div className="app__right-column">
                         <CoinStats coin={selectedCoin} />
-                        {/* Watchlist and PortfolioSimulator will go here later */}
+                        <Watchlist 
+                            watchlist={watchlist}
+                            cryptoData={cryptoData}
+                            onRemoveFromWatchlist={handleRemoveFromWatchlist}
+                            onAddToWatchlist={handleAddToWatchlist}
+                            onSelectCoin={handleSelectCoin}
+                        />
                     </div>
                 </div>
             </main>
