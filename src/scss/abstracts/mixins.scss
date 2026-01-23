@@ -129,7 +129,7 @@
 }
   
 @mixin gradient-dark {
-    background: linear-gradient(135deg, $color-bg-dark 0%, darken($color-bg-dark, 5%) 100%);
+    background: linear-gradient(135deg, $color-bg-dark 0%, color.adjust($color-bg-dark, $lightness: -5%) 100%);
 }
   
 // ===== COMPONENT MIXINS =====

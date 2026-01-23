@@ -1,5 +1,6 @@
 @use '../../scss/abstracts/variables' as *;
 @use '../../scss/abstracts/mixins' as *;
+@use 'sass:color';
 
 .crypto-table {
     background-color: $color-bg-dark;
@@ -210,7 +211,7 @@
             color: $color-text-secondary;
 
             &:hover {
-                background-color: lighten($color-bg-border, 5%);
+                background-color: color.adjust($color-bg-border, $lightness: 5%);
                 color: $color-text-primary;
             }
         }
@@ -246,7 +247,7 @@
         transition: background-color 0.2s ease;
 
         &:hover {
-            background-color: darken($color-primary, 10%);
+            background-color: color.adjust($color-primary, $lightness: -10%);
         }
     }
 }

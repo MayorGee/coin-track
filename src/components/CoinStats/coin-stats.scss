@@ -1,5 +1,6 @@
 @use '../../scss/abstracts/variables' as *;
 @use '../../scss/abstracts/mixins' as *;
+@use 'sass:color';
 
 .coin-stats {
     background-color: $color-bg-dark;
@@ -184,7 +185,7 @@
             color: $color-bg-dark;
 
             &:hover {
-                background-color: darken($color-success, 10%);
+                background-color: color.adjust($color-success, $lightness: -10%);
             }
         }
 
@@ -193,7 +194,7 @@
             color: white;
 
             &:hover {
-                background-color: darken($color-error, 10%);
+                background-color: color.adjust($color-error, $lightness: -10%);
             }
         }
     }

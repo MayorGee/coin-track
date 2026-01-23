@@ -9,6 +9,7 @@ import CryptoTable from "./components/CryptoTable";
 import Watchlist from "./components/Watchlist";
 
 import './scss/index.scss';
+import PortfolioSimulator from "./components/PortfolioSimulator";
 
 function App() {
     const [cryptoData, setCryptoData] = useState<CryptoData[]>(generateMockCryptoData());
@@ -75,6 +76,7 @@ function App() {
                             onAddToWatchlist={handleAddToWatchlist}
                             onSelectCoin={handleSelectCoin}
                         />
+                        <PortfolioSimulator cryptoData={cryptoData} />
                     </div>
                 </div>
             </main>

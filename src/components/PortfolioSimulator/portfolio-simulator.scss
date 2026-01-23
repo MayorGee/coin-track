@@ -1,0 +1,356 @@
+@use '../../scss/abstracts/variables' as *;
+@use '../../scss/abstracts/mixins' as *;
+@use 'sass:color';
+
+.portfolio-simulator {
+    background-color: $color-bg-dark;
+    border: 1px solid $color-bg-border;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    width: 100%;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    &__header-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: $color-primary;
+    }
+
+    &__title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: $color-text-primary;
+        margin: 0;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    &__label {
+        font-size: 0.75rem;
+        color: $color-text-secondary;
+    }
+
+    &__select,
+    &__input {
+        width: 100%;
+        background-color: $color-bg-border;
+        border: 1px solid color.adjust($color-bg-border, $lightness: 10%);
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        color: $color-text-primary;
+        transition: border-color 0.2s ease;
+
+        &:focus {
+            outline: none;
+            border-color: $color-primary;
+        }
+    }
+
+    &__add-btn {
+        width: 100%;
+        background-color: $color-primary;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color:color.adjust($color-primary, $lightness: 10%);
+        }
+    }
+
+    &__add-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    &__stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    &__stat-card {
+        background-color: rgba(30, 41, 59, 0.5);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: rgba(30, 41, 59, 0.7);
+        }
+    }
+
+    &__stat-label {
+        font-size: 0.75rem;
+        color: $color-text-secondary;
+        margin-bottom: 0.25rem;
+    }
+
+    &__stat-value {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $color-text-primary;
+        margin: 0;
+    }
+
+    &__profit-loss {
+        background-color: rgba(30, 41, 59, 0.5);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    &__profit-loss-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.25rem;
+    }
+
+    &__profit-loss-label {
+        font-size: 0.875rem;
+        color: $color-text-secondary;
+    }
+
+    &__profit-loss-value {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+
+        &--positive {
+            color: $color-success;
+        }
+
+        &--negative {
+            color: $color-error;
+        }
+    }
+
+    &__trend-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    &__profit-loss-percentage {
+        text-align: right;
+    }
+
+    &__percentage {
+        font-size: 0.875rem;
+        font-weight: 600;
+
+        &--positive {
+            color: $color-success;
+        }
+
+        &--negative {
+            color: $color-error;
+        }
+    }
+
+    &__chart {
+        margin-bottom: 1.5rem;
+    }
+
+    &__chart-title {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $color-text-secondary;
+        margin-bottom: 0.75rem;
+    }
+
+    &__holdings-title {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $color-text-secondary;
+        margin-bottom: 0.5rem;
+    }
+
+    &__holdings-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    &__holding-item {
+        background-color: rgba(30, 41, 59, 0.5);
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: rgba(30, 41, 59, 0.7);
+
+            .portfolio-simulator__remove-btn {
+                opacity: 1;
+            }
+        }
+    }
+
+    &__holding-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    &__holding-color {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+    }
+
+    &__holding-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+    }
+
+    &__holding-symbol {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $color-text-primary;
+        margin: 0;
+    }
+
+    &__holding-amount {
+        font-size: 0.75rem;
+        color: $color-text-secondary;
+        margin: 0;
+    }
+
+    &__holding-values {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    &__holding-value-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+        align-items: flex-end;
+    }
+
+    &__holding-value {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $color-text-primary;
+        margin: 0;
+    }
+
+    &__holding-percentage {
+        font-size: 0.75rem;
+        font-weight: 600;
+
+        &--positive {
+            color: $color-success;
+        }
+
+        &--negative {
+            color: $color-error;
+        }
+    }
+
+    &__remove-btn {
+        padding: 0.25rem;
+        background: none;
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        opacity: 0;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background-color: color.adjust($color-bg-border, $lightness: 10%);
+        }
+    }
+
+    &__remove-icon {
+        width: 1rem;
+        height: 1rem;
+        color: $color-error;
+    }
+
+    &__empty {
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    &__empty-icon {
+        width: 3rem;
+        height: 3rem;
+        color: $color-bg-border;
+        margin: 0 auto 0.75rem;
+    }
+
+    &__empty-text {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin: 0 0 0.25rem;
+    }
+
+    &__empty-hint {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin: 0;
+    }
+
+    &__tooltip {
+        background-color: $chart-tooltip-bg;
+        border: 1px solid $chart-tooltip-border;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    &__tooltip-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $chart-tooltip-highlight;
+        margin-bottom: 0.125rem;
+    }
+
+    &__tooltip-value {
+        font-size: 0.75rem;
+        color: $chart-tooltip-text;
+        margin-bottom: 0.125rem;
+    }
+
+    &__tooltip-percentage {
+        font-size: 0.75rem;
+        color: $color-primary;
+    }
+}
