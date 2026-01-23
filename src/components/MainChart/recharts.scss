@@ -58,22 +58,21 @@
     opacity: 0.6;
 }
 
-.recharts-tooltip-wrapper {
-    background-color: $chart-tooltip-bg;
-    border: 1px solid $chart-tooltip-border;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    font-size: 12px;
-
+.recharts-default-tooltip {
+    background-color: $chart-tooltip-bg !important;
+    border: 1px solid $chart-tooltip-border !important;
+    border-radius: 0.5rem ;
+    padding: 0.5rem ;
+        
     .recharts-tooltip-label {
-        color: $chart-tooltip-text;
-        font-size: 11px;
+        color: $chart-tooltip-text !important;
+        font-size: 0.75rem ;
         margin-bottom: 0.25rem;
     }
-
+        
     .recharts-tooltip-item {
-        color: $chart-tooltip-highlight;
-        font-size: 12px;
+        color: $chart-tooltip-highlight !important;
+        font-size: 0.75rem;
         font-weight: 600;
     }
 }
