@@ -9,11 +9,11 @@
 
 // Flexbox shortcuts
 .util-flex-center {
-  @include flex-center;
+    @include flex-center;
 }
 
 .util-flex-between {
-  @include flex-between;
+    @include flex-between;
 }
 
 // Spacing shortcuts
@@ -34,19 +34,19 @@
 
 // Visibility
 .util-visually-hidden {
-  @include visually-hidden;
+    @include visually-hidden;
 }
 
 // Responsive utilities
 .util-mobile-only {
-  @include respond-to('medium') {
-    display: none;
-  }
+    @include respond-to('medium') {
+      display: none;
+    }
 }
 
 .util-desktop-only {
-  display: none;
-  @include min-width('large') {
-    display: block;
-  }
+    display: none;
+    @include min-width('large') {
+      display: block;
+    }
 }

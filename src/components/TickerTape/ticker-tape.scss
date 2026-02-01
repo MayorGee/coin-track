@@ -32,9 +32,7 @@
     }
 
     &__logo {
-        font-size: 1.125rem;
-        line-height: 1;
-        color: $color-text-secondary;
+        width: 1.2rem;
     }
 
     &__info {
@@ -79,7 +77,6 @@
     }
 }
 
-// Animation for the ticker tape
 @keyframes ticker-scroll {
     0% {
         transform: translateX(0);
@@ -89,12 +86,10 @@
     }
 }
 
-// Apply animation if JavaScript fails/disabled
 .ticker-tape__container {
     animation: ticker-scroll 60s linear infinite;
 }
 
-// Pause animation on hover
 .ticker-tape__container:hover {
     animation-play-state: paused;
 }
