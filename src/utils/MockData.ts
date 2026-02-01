@@ -1,195 +1,182 @@
-import type{ CryptoData, CandleData, MarketStats } from "../types/crypto";
+import type { CandleData, CryptoData } from '../types/crypto';
 
 export const generateMockCryptoData = (): CryptoData[] => {
     return [
         {
             id: 'bitcoin',
-            rank: 1,
-            symbol: 'BTC',
             name: 'Bitcoin',
-            price: 43567.89,
-            change24h: 2.34,
-            marketCap: 853000000000,
-            volume24h: 28500000000,
-            high24h: 44120.50,
-            low24h: 42890.30,
-            ath: 69000.00,
-            logo: '₿'
+            symbol: 'BTC',
+            image: 'https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400',
+            rank: 1,
+            price: 81237,
+            change24h: -2.09963,
+            marketCap: 1621663737391,
+            volume24h: 56510685937,
+            high24h: 84368,
+            low24h: 80898,
+            ath: 126080
         },
         {
             id: 'ethereum',
-            rank: 2,
-            symbol: 'ETH',
             name: 'Ethereum',
-            price: 2287.45,
-            change24h: -1.23,
-            marketCap: 275000000000,
-            volume24h: 15200000000,
-            high24h: 2315.80,
-            low24h: 2265.20,
-            ath: 4878.26,
-            logo: 'Ξ'
+            symbol: 'ETH',
+            image: 'https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628',
+            rank: 2,
+            price: 2533.24,
+            change24h: -7.30263,
+            marketCap: 305120886868,
+            volume24h: 36682841990,
+            high24h: 2753.01,
+            low24h: 2517.95,
+            ath: 4946.05
         },
         {
             id: 'tether',
-            rank: 3,
-            symbol: 'USDT',
             name: 'Tether',
-            price: 1.00,
-            change24h: 0.01,
-            marketCap: 95000000000,
-            volume24h: 45000000000,
-            high24h: 1.001,
-            low24h: 0.999,
-            ath: 1.32,
-            logo: '₮'
+            symbol: 'USDT',
+            image: 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png?1696501661',
+            rank: 3,
+            price: 0.998583,
+            change24h: 0.00655,
+            marketCap: 185106467178,
+            volume24h: 101686029463,
+            high24h: 0.998699,
+            low24h: 0.998257,
+            ath: 1.32
         },
         {
-            id: 'bnb',
-            rank: 4,
-            symbol: 'BNB',
+            id: 'binancecoin',
             name: 'BNB',
-            price: 312.67,
-            change24h: 3.45,
-            marketCap: 48000000000,
-            volume24h: 1200000000,
-            high24h: 318.90,
-            low24h: 308.20,
-            ath: 690.93,
-            logo: 'ᗷ'
+            symbol: 'BNB',
+            image: 'https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970',
+            rank: 4,
+            price: 809.83,
+            change24h: -4.89691,
+            marketCap: 110198542513,
+            volume24h: 1860709175,
+            high24h: 859.25,
+            low24h: 806.57,
+            ath: 1369.99
+        },
+        {
+            id: 'ripple',
+            name: 'XRP',
+            symbol: 'XRP',
+            image: 'https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442',
+            rank: 5,
+            price: 1.63,
+            change24h: -7.60609,
+            marketCap: 98999386079,
+            volume24h: 4471285565,
+            high24h: 1.78,
+            low24h: 1.62,
+            ath: 3.65
+        },
+        {
+            id: 'usd-coin',
+            name: 'USDC',
+            symbol: 'USDC',
+            image: 'https://coin-images.coingecko.com/coins/images/6319/large/USDC.png?1769615602',
+            rank: 6,
+            price: 0.999722,
+            change24h: 0.00766,
+            marketCap: 70034080808,
+            volume24h: 11947927261,
+            high24h: 0.999811,
+            low24h: 0.999521,
+            ath: 1.17
         },
         {
             id: 'solana',
-            rank: 5,
-            symbol: 'SOL',
             name: 'Solana',
-            price: 98.34,
-            change24h: 5.67,
-            marketCap: 42000000000,
-            volume24h: 2100000000,
-            high24h: 101.20,
-            low24h: 95.80,
-            ath: 260.06,
-            logo: '◎'
-        },
-        {
-            id: 'xrp',
-            rank: 6,
-            symbol: 'XRP',
-            name: 'XRP',
-            price: 0.5234,
-            change24h: -2.45,
-            marketCap: 28000000000,
-            volume24h: 1800000000,
-            high24h: 0.5410,
-            low24h: 0.5180,
-            ath: 3.84,
-            logo: 'X'
-        },
-        {
-            id: 'cardano',
+            symbol: 'SOL',
+            image: 'https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756',
             rank: 7,
-            symbol: 'ADA',
-            name: 'Cardano',
-            price: 0.4567,
-            change24h: 1.89,
-            marketCap: 16000000000,
-            volume24h: 780000000,
-            high24h: 0.4680,
-            low24h: 0.4450,
-            ath: 3.09,
-            logo: '₳'
-        },
-        {
-            id: 'dogecoin',
-            rank: 8,
-            symbol: 'DOGE',
-            name: 'Dogecoin',
-            price: 0.0812,
-            change24h: 4.23,
-            marketCap: 11500000000,
-            volume24h: 650000000,
-            high24h: 0.0835,
-            low24h: 0.0795,
-            ath: 0.7376,
-            logo: 'Ð'
+            price: 108.92,
+            change24h: -6.46007,
+            marketCap: 61605853360,
+            volume24h: 6508111283,
+            high24h: 118.61,
+            low24h: 108.81,
+            ath: 293.31
         },
         {
             id: 'tron',
-            rank: 9,
-            symbol: 'TRX',
             name: 'TRON',
-            price: 0.1045,
-            change24h: -0.67,
-            marketCap: 9200000000,
-            volume24h: 420000000,
-            high24h: 0.1065,
-            low24h: 0.1032,
-            ath: 0.2316,
-            logo: 'T'
+            symbol: 'TRX',
+            image: 'https://coin-images.coingecko.com/coins/images/1094/large/tron-logo.png?1696502193',
+            rank: 8,
+            price: 0.287611,
+            change24h: -1.37264,
+            marketCap: 27238812375,
+            volume24h: 746975023,
+            high24h: 0.294849,
+            low24h: 0.287585,
+            ath: 0.431288
         },
         {
-            id: 'avalanche',
+            id: 'staked-ether',
+            name: 'Lido Staked Ether',
+            symbol: 'STETH',
+            image: 'https://coin-images.coingecko.com/coins/images/13442/large/steth_logo.png?1696513206',
+            rank: 9,
+            price: 2525.22,
+            change24h: -7.76628,
+            marketCap: 24127356650,
+            volume24h: 36351180,
+            high24h: 2749.31,
+            low24h: 2517.78,
+            ath: 4932.89
+        },
+        {
+            id: 'dogecoin',
+            name: 'Dogecoin',
+            symbol: 'DOGE',
+            image: 'https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409',
             rank: 10,
-            symbol: 'AVAX',
-            name: 'Avalanche',
-            price: 36.78,
-            change24h: 2.91,
-            marketCap: 14000000000,
-            volume24h: 580000000,
-            high24h: 37.50,
-            low24h: 35.80,
-            ath: 146.22,
-            logo: 'Λ'
+            price: 0.106705,
+            change24h: -7.62512,
+            marketCap: 17976182266,
+            volume24h: 1568768416,
+            high24h: 0.118269,
+            low24h: 0.106305,
+            ath: 0.731578
         }
     ];
 };
 
-export const generateCandleData = (basePrice: number, days: number = 30): CandleData[] => {
-  const data: CandleData[] = [];
-  let currentPrice = basePrice * 0.85; // Start 15% lower
-  const now = Date.now();
-  const interval = 24 * 60 * 60 * 1000; // 1 day
+export const generateCandleData = (basePrice: number, count: number): CandleData[] => {
+    const data: CandleData[] = [];
+    let currentPrice = basePrice;
+    const today = new Date();
+    
+    for (let i = 0; i < count; i++) {
+        const date = new Date();
+        date.setDate(today.getDate() - i);
 
-  for (let i = days; i >= 0; i--) {
-    const open = currentPrice;
-    const volatility = basePrice * 0.03; // 3% volatility
-    const change = (Math.random() - 0.5) * volatility * 2;
-    const close = open + change;
-    const high = Math.max(open, close) + Math.random() * volatility * 0.5;
-    const low = Math.min(open, close) - Math.random() * volatility * 0.5;
-    const volume = Math.random() * 1000000000 + 500000000;
-
-    data.push({
-      timestamp: now - (i * interval),
-      open,
-      high,
-      low,
-      close,
-      volume
-    });
-
-    currentPrice = close;
-  }
-
-  return data;
-};
-
-export const getMarketStats = (cryptoData: CryptoData[]): MarketStats => {
-  const totalMarketCap = cryptoData.reduce((sum, coin) => sum + coin.marketCap, 0);
-  const total24hVolume = cryptoData.reduce((sum, coin) => sum + coin.volume24h, 0);
-  const btcMarketCap = cryptoData.find(c => c.id === 'bitcoin')?.marketCap || 0;
-  const btcDominance = (btcMarketCap / totalMarketCap) * 100;
-
-  return {
-    totalMarketCap,
-    total24hVolume,
-    btcDominance
-  };
-};
-
-export const updatePriceWithVolatility = (price: number, volatility: number = 0.002): number => {
-  // Generate realistic price movement (±0.2% by default)
-  const change = (Math.random() - 0.5) * 2 * volatility * price;
-  return price + change;
+        const time = date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        const open = currentPrice;
+        const change = (Math.random() - 0.5) * 0.1 * basePrice; // ±5% change
+        const close = open + change;
+        const high = Math.max(open, close) + Math.random() * 0.02 * basePrice;
+        const low = Math.min(open, close) - Math.random() * 0.02 * basePrice;
+        const volume = Math.random() * 1000000000 + 500000000;
+        
+        data.push({
+            time: time,
+            open,
+            high,
+            volume,
+            low,
+            close
+        });
+        
+        currentPrice = close;
+    }
+    
+    return data;
 };

@@ -1,36 +1,52 @@
 export default class Formatter {
-    static formatPrice(price: number): string {
-        if (price >= 1000) {
-            return `$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        } else if (price >= 1) {
-            return `$${price.toFixed(2)}`;
-        } else {
-            return `$${price.toFixed(4)}`;
-        }
-    }
+    static formatPrice(price: number | undefined | null): string {
 
-    static formatLargeNumber(number: number): string {
-        if (number >= 1e12) {
-            return `$${(number / 1e12).toFixed(2)}T`;
-        } else if (number >= 1e9) {
-            return `$${(number / 1e9).toFixed(2)}B`;
-        } else if (number >= 1e6) {
-            return `$${(number / 1e6).toFixed(2)}M`;
-        } else if (number >= 1e3) {
-            return `$${(number / 1e3).toFixed(2)}K`;
+        if (price === undefined || price === null || isNaN(price)) {
+            return '$0.00';
+        }
+
+        if (price >= 1000) {
+            return `$${price.toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            })}`;
         }
         
-        return `$${number.toFixed(2)}`;
+        if (price >= 1) {
+            return `$${price.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })}`;
+        }
+        
+        // For very small prices (under $1)
+        return `$${price.toFixed(4)}`;
     }
 
-    static formatPercentage(percent: number):string {
-        const sign = percent >= 0 ? '+' : '';
+    static formatLargeNumber(num: number | undefined | null): string {
+        if (num === undefined || num === null || isNaN(num)) {
+            return '$0';
+        }
 
-        return `${sign}${percent.toFixed(2)}%`;
+        if (num >= 1e12) return `$${(num / 1e12).toFixed(2)}T`;
+        if (num >= 1e9) return `$${(num / 1e9).toFixed(2)}B`;
+        if (num >= 1e6) return `$${(num / 1e6).toFixed(2)}M`;
+        return `$${this.formatPrice(num)}`;
     }
 
-    static formatDate(timestamp: number): string {
-        return new Date(timestamp).toLocaleDateString('en-US', {
+    static formatPercentage(change: number | undefined | null): string {
+        if (change === undefined || change === null || isNaN(change)) {
+            return '0.00%';
+        }
+
+        const sign = change >= 0 ? '+' : '';
+        return `${sign}${change.toFixed(2)}%`;
+    }
+
+    static formatDate(timestamp: string): string {
+        let date = new Date(timestamp);
+
+        return new Date(date).toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric'
         });
@@ -45,4 +61,3 @@ export default class Formatter {
         });
     }
 }
-  

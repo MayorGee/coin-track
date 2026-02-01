@@ -1,27 +1,16 @@
 import { useState, useMemo } from 'react';
-import type { CryptoData } from '../../types/crypto';
+import type { CryptoTableProps, SortDirection, SortKey } from '../../types/crypto';
 import Formatter from '../../utils/Formatter';
 import { ArrowUpDown, ArrowUp, ArrowDown, TrendingUp, TrendingDown, Star } from 'lucide-react';
 import './crypto-table.scss';
 
-interface CryptoTableProps {
-    cryptoData: CryptoData[];
-    onSelectCoin: (coin: CryptoData) => void;
-    selectedCoinId: string;
-    onAddToWatchlist: (coinId: string) => void;
-    watchlist: string[];
-}
-
-type SortKey = 'rank' | 'name' | 'price' | 'change24h' | 'marketCap';
-type SortDirection = 'asc' | 'desc';
-
-export function CryptoTable({ 
+const CryptoTable = ({ 
     cryptoData, 
     onSelectCoin, 
     selectedCoinId,
     onAddToWatchlist,
     watchlist
-}: CryptoTableProps) {
+}: CryptoTableProps) => {
     const [sortKey, setSortKey] = useState<SortKey>('rank');
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -146,7 +135,11 @@ export function CryptoTable({
                                     <td className="crypto-table__td">
                                         <div className="crypto-table__coin-info">
                                             <div className="crypto-table__coin-logo">
-                                                {coin.logo}
+                                                <img 
+                                                    src={coin.image} 
+                                                    alt={coin.name}
+                                                    className="crypto-table__coin-image"
+                                                />
                                             </div>
                                             <div className="crypto-table__coin-details">
                                                 <div className="crypto-table__coin-name">{coin.name}</div>

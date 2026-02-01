@@ -1,11 +1,7 @@
-import type { CryptoData } from '../../types/crypto';
+import type { CoinStatsProps } from '../../types/crypto';
 import Formatter from '../../utils/Formatter';
 import { TrendingUp, TrendingDown, DollarSign, Activity } from 'lucide-react';
 import './coin-stats.scss';
-
-interface CoinStatsProps {
-    coin: CryptoData;
-}
 
 export function CoinStats({ coin }: CoinStatsProps) {
     const isPositive = coin.change24h >= 0;
@@ -14,9 +10,10 @@ export function CoinStats({ coin }: CoinStatsProps) {
     return (
         <div className="coin-stats">
             <div className="coin-stats__header">
-                <div className="coin-stats__logo">
-                    {coin.logo}
-                </div>
+                <img 
+                    src={coin.image}
+                    className="coin-stats__logo"
+                />
                 <div className="coin-stats__titles">
                     <h2 className="coin-stats__name">{coin.name}</h2>
                     <p className="coin-stats__symbol">{coin.symbol}</p>
@@ -34,7 +31,10 @@ export function CoinStats({ coin }: CoinStatsProps) {
                         {Formatter.formatPrice(coin.price)}
                     </p>
                     <div className={`coin-stats__change ${isPositive ? 'coin-stats__change--positive' : 'coin-stats__change--negative'}`}>
-                        {isPositive ? <TrendingUp className="coin-stats__change-icon" /> : <TrendingDown className="coin-stats__change-icon" />}
+                        {isPositive ? 
+                            <TrendingUp className="coin-stats__change-icon" /> : 
+                            <TrendingDown className="coin-stats__change-icon" />
+                        }
                         {isPositive ? '+' : ''}{coin.change24h.toFixed(2)}%
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export function CoinStats({ coin }: CoinStatsProps) {
                     </button>
                 </div>
                 <p className="coin-stats__disclaimer">
-                    * Simulation only - not real trading
+                    * Simulation only - not real trading (yet)
                 </p>
             </div>
         </div>

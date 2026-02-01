@@ -3,7 +3,7 @@ import Formatter from '../../utils/Formatter';
 import { Activity, TrendingUp, BarChart3 } from 'lucide-react';
 import './header.scss';
 
-export function Header({ marketStats, isConnected }: HeaderProps) {
+const Header = ({ marketStats, isConnected }: HeaderProps) => {
     const statusClass = isConnected ? 'connected' : 'disconnected';
     const hasPulse = isConnected ? 'header__status-indicator--pulsing' : '';
 
@@ -27,7 +27,7 @@ export function Header({ marketStats, isConnected }: HeaderProps) {
                         }>
                             <div className={`header__status-indicator header__status-indicator--${statusClass} ${hasPulse}`} />
                             <span className="header__status-text">
-                                {isConnected ? 'Live' : 'Disconnected'}
+                                {isConnected ? 'Live' : 'Mock Data'}
                             </span>
                         </div>
                     </div>

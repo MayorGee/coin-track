@@ -1,29 +1,41 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { 
-    LineChart, Line, AreaChart, Area, BarChart, Bar, 
+    AreaChart, Area, BarChart, Bar, 
     XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
-import type { CryptoData, CandleData } from '../../types/crypto';
+import type { TimeFrame, ChartIndicator, MainChartProps } from '../../types/crypto';
 import Formatter from '../../utils/Formatter';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import { LocalStorage, StorageKeys } from '../../utils/LocalStorage';
 import './main-chart.scss';
 
-interface MainChartProps {
-    selectedCoin: CryptoData;
-    candleData: CandleData[];
-}
-
-type TimeFrame = '1H' | '4H' | '1D' | '1W' | '1M';
-type ChartIndicator = 'none' | 'sma' | 'rsi';
-
 export function MainChart({ selectedCoin, candleData }: MainChartProps) {
-    const [timeFrame, setTimeFrame] = useState<TimeFrame>('1D');
-    const [indicator, setIndicator] = useState<ChartIndicator>('none');
+    const [timeFrame, setTimeFrame] = useState<TimeFrame>(() => {
+        return LocalStorage.getItem<TimeFrame>(StorageKeys.CHART_TIMEFRAME, '1D');
+    });
+    const [indicator, setIndicator] = useState<ChartIndicator>(() => {
+        return LocalStorage.getItem<ChartIndicator>(StorageKeys.CHART_INDICATOR, 'None');
+    });
+
+    useEffect(() => {
+        LocalStorage.setItem(StorageKeys.CHART_TIMEFRAME, timeFrame);
+    }, [timeFrame]);
+    
+    useEffect(() => {
+        LocalStorage.setItem(StorageKeys.CHART_INDICATOR, indicator);
+    }, [indicator]);
+
+    const handleTimeFrameChange = (tf: TimeFrame) => {
+        setTimeFrame(tf);
+    };
+
+    const handleIndicatorChange = (ind: ChartIndicator) => {
+        setIndicator(ind);
+    };
 
     const chartData = useMemo(() => {
         let filtered = [...candleData];
         
-        // Filter based on timeframe
         if (timeFrame === '1H') {
             filtered = filtered.slice(-24);
         } else if (timeFrame === '4H') {
@@ -33,8 +45,8 @@ export function MainChart({ selectedCoin, candleData }: MainChartProps) {
         }
 
         return filtered.map(candle => ({
-            timestamp: candle.timestamp,
-            date: Formatter.formatDate(candle.timestamp),
+            timestamp: candle.time,
+            date: Formatter.formatDate(candle.time),
             price: candle.close,
             volume: candle.volume,
             high: candle.high,
@@ -67,14 +79,13 @@ export function MainChart({ selectedCoin, candleData }: MainChartProps) {
 
     const timeFrames: TimeFrame[] = ['1H', '4H', '1D', '1W', '1M'];
     const chartIndicators: { value: ChartIndicator; label: string }[] = [
-        { value: 'none', label: 'None' },
-        { value: 'sma', label: 'SMA' },
-        { value: 'rsi', label: 'RSI' },
+        { value: 'None', label: 'None' },
+        { value: 'SMA', label: 'SMA' },
+        { value: 'RSI', label: 'RSI' },
     ];
 
     const gradientId = `colorPrice-${selectedCoin.id}-${isPositive ? 'up' : 'down'}`;
 
-    // Fix for Tooltip formatter type issue
     const formatTooltipValue = (value: number | undefined) => {
         if (value === undefined) return '';
         return Formatter.formatPrice(value);
@@ -85,9 +96,10 @@ export function MainChart({ selectedCoin, candleData }: MainChartProps) {
             {/* Header */}
             <div className="main-chart__header">
                 <div className="main-chart__coin-info">
-                    <div className="main-chart__coin-logo">
-                        {selectedCoin.logo}
-                    </div>
+                    <img 
+                        src={selectedCoin.image}
+                        className="main-chart__coin-logo"
+                    />
                     <div className="main-chart__coin-details">
                         <h2 className="main-chart__coin-name">
                             {selectedCoin.name} <span className="main-chart__coin-symbol">{selectedCoin.symbol}</span>
@@ -110,7 +122,7 @@ export function MainChart({ selectedCoin, candleData }: MainChartProps) {
                         {timeFrames.map((tf) => (
                             <button
                                 key={tf}
-                                onClick={() => setTimeFrame(tf)}
+                                onClick={() => handleTimeFrameChange(tf)}
                                 className={`main-chart__timeframe-btn ${timeFrame === tf ? 'main-chart__timeframe-btn--active' : ''}`}
                             >
                                 {tf}
@@ -123,7 +135,7 @@ export function MainChart({ selectedCoin, candleData }: MainChartProps) {
                         {chartIndicators.map((ind) => (
                             <button
                                 key={ind.value}
-                                onClick={() => setIndicator(ind.value)}
+                                onClick={() => handleIndicatorChange(ind.value)}
                                 className={`main-chart__indicator-btn ${indicator === ind.value ? 'main-chart__indicator-btn--active' : ''}`}
                             >
                                 {ind.label}

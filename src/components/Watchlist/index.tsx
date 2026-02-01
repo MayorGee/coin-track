@@ -1,16 +1,8 @@
 import { useState } from 'react';
-import type { CryptoData } from '../../types/crypto';
+import type { WatchlistProps } from '../../types/crypto';
 import Formatter from '../../utils/Formatter';
 import { X, Search, Star } from 'lucide-react';
 import './watchlist.scss';
-
-interface WatchlistProps {
-    watchlist: string[];
-    cryptoData: CryptoData[];
-    onRemoveFromWatchlist: (coinId: string) => void;
-    onAddToWatchlist: (coinId: string) => void;
-    onSelectCoin: (coin: CryptoData) => void;
-}
 
 export function Watchlist({ 
     watchlist, 
@@ -80,7 +72,10 @@ export function Watchlist({
                                     className="watchlist__search-result"
                                 >
                                     <div className="watchlist__result-info">
-                                        <span className="watchlist__result-logo">{coin.logo}</span>
+                                        <img
+                                            src={coin.image}
+                                            className="watchlist__item-logo"
+                                        />
                                         <div className="watchlist__result-details">
                                             <p className="watchlist__result-symbol">{coin.symbol}</p>
                                             <p className="watchlist__result-name">{coin.name}</p>
@@ -113,7 +108,10 @@ export function Watchlist({
                             >
                                 <div className="watchlist__item-header">
                                     <div className="watchlist__item-info">
-                                        <span className="watchlist__item-logo">{coin.logo}</span>
+                                        <img
+                                            src={coin.image}
+                                            className="watchlist__item-logo"
+                                        />
                                         <div className="watchlist__item-details">
                                             <p className="watchlist__item-symbol">{coin.symbol}</p>
                                             <p className="watchlist__item-name">{coin.name}</p>

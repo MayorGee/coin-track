@@ -1,20 +1,23 @@
-import { useState, useMemo } from 'react';
-import type { CryptoData, PortfolioItem } from '../../types/crypto';
+import { useState, useMemo, useEffect } from 'react';
+import { LocalStorage, StorageKeys } from '../../utils/LocalStorage';
+import type { PortfolioItem, PortfolioSimulatorProps } from '../../types/crypto';
 import Formatter from '../../utils/Formatter';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { TrendingUp, TrendingDown, PlusCircle, Trash2, Wallet } from 'lucide-react';
 import './portfolio-simulator.scss';
-
-interface PortfolioSimulatorProps {
-    cryptoData: CryptoData[];
-}
 
 const COLORS = ['#3b82f6', '#00ff9d', '#8b5cf6', '#fbbf24', '#ff4d4d', '#06b6d4', '#ec4899', '#10b981'];
 
 export function PortfolioSimulator({ cryptoData }: PortfolioSimulatorProps) {
-    const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
+    const [portfolio, setPortfolio] = useState<PortfolioItem[]>(() => {
+        return LocalStorage.getItem<PortfolioItem[]>(StorageKeys.PORTFOLIO, []);
+    });
     const [selectedCoinId, setSelectedCoinId] = useState(cryptoData[0]?.id || '');
     const [investmentAmount, setInvestmentAmount] = useState('1000');
+
+    useEffect(() => {
+        LocalStorage.setItem(StorageKeys.PORTFOLIO, portfolio);
+    }, [portfolio]);
 
     const handleAddToPortfolio = () => {
         const amount = parseFloat(investmentAmount);
@@ -23,7 +26,6 @@ export function PortfolioSimulator({ cryptoData }: PortfolioSimulatorProps) {
         const coin = cryptoData.find(c => c.id === selectedCoinId);
         if (!coin) return;
 
-        // Check if coin already exists in portfolio
         const existingIndex = portfolio.findIndex(p => p.coinId === selectedCoinId);
         
         if (existingIndex >= 0) {
@@ -65,12 +67,11 @@ export function PortfolioSimulator({ cryptoData }: PortfolioSimulatorProps) {
             holdings.push({
                 name: coin.symbol,
                 value: currentValue,
-                percentage: 0, // Will be calculated after
+                percentage: 0,
                 color: COLORS[index % COLORS.length]
             });
         });
 
-        // Calculate percentages
         holdings.forEach(holding => {
             holding.percentage = totalCurrent > 0 ? (holding.value / totalCurrent) * 100 : 0;
         });

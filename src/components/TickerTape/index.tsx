@@ -1,12 +1,8 @@
 import { useEffect, useRef } from 'react';
-import type { CryptoData } from '../../types/crypto';
+import type { TickerTapeProps } from '../../types/crypto';
 import Formatter from '../../utils/Formatter';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import './ticker-tape.scss';
-
-interface TickerTapeProps {
-  cryptoData: CryptoData[];
-}
 
 export function TickerTape({ cryptoData }: TickerTapeProps) {
     const tickerRef = useRef<HTMLDivElement>(null);
@@ -41,7 +37,7 @@ export function TickerTape({ cryptoData }: TickerTapeProps) {
         };
     }, []);
 
-  // Create duplicated array for seamless loop
+    // Duplicate array for seamless loop
     const tickerItems = [...cryptoData, ...cryptoData];
 
     return (
@@ -54,7 +50,10 @@ export function TickerTape({ cryptoData }: TickerTapeProps) {
                             key={`${coin.id}-${index}`}
                             className="ticker-tape__item"
                         >
-                            <span className="ticker-tape__logo">{coin.logo}</span>
+                            <img
+                                src={coin.image}
+                                className="ticker-tape__logo" 
+                            />
                             <div className="ticker-tape__info">
                                 <span className="ticker-tape__symbol">
                                     {coin.symbol}
