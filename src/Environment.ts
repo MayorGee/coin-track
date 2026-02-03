@@ -6,8 +6,4 @@ export default class Environment {
     static getCoingeckoApiUrl(): string | undefined {
         return import.meta.env.VITE_COINGECKO_API_URL || '';
     }
-
-    static getCoingeckoApiCacheDuration(): number {
-        return Number(import.meta.env.VITE_API_CACHE_DURATION);
-    }
 }

@@ -30,6 +30,7 @@ export const StorageKeys = {
     WATCHLIST: 'coin-track-watchlist',
     SELECTED_COIN: 'coin-track-selected-coin',
     CHART_TIMEFRAME: 'coin-track-chart-timeframe',
+    CHART_TYPE: 'crypto-dashboard-chart-type',
     CHART_INDICATOR: 'coin-track-chart-indicator',
     PORTFOLIO: 'coin-track-portfolio'
 };

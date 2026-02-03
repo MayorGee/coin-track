@@ -56,7 +56,6 @@ export interface HeaderProps {
 
 export interface MainChartProps {
     selectedCoin: CryptoData;
-    candleData: CandleData[];
 }
 
 export interface CoinStatsProps {

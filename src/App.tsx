@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { CandleData, CryptoData } from "./types/crypto";
-import { generateCandleData, generateMockCryptoData } from "./utils/MockData";
+import type { CryptoData } from "./types/crypto";
+import { generateMockCryptoData } from "./utils/MockData";
 import { LocalStorage, StorageKeys } from "./utils/LocalStorage";
 import Header  from "./components/Header";
 import TickerTape from "./components/TickerTape";
@@ -17,7 +17,6 @@ const App = () =>  {
     const [cryptoData, setCryptoData] = useState<CryptoData[]>([]);
     const [selectedCoin, setSelectedCoin] = useState<CryptoData | null>(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [candleData, setCandleData] = useState<CandleData[]>([]);
     const [loading, setLoading] = useState(true);
     const [watchlist, setWatchlist] = useState<string[]>(
         () => LocalStorage.getItem<string[]>(
@@ -71,12 +70,6 @@ const App = () =>  {
 
         fetchAllData();
     }, []);
-
-    useEffect(() => {
-        if (selectedCoin) {
-            setCandleData(generateCandleData(selectedCoin.price, 30));
-        }
-    }, [selectedCoin?.id]);
 
     const handleSelectCoin = (coin: CryptoData) => {
         setSelectedCoin(coin);
@@ -142,10 +135,7 @@ const App = () =>  {
                 <div className="app__layout">
                     {/* Left Column - Main Chart */}
                     <div className="app__left-column">
-                        <MainChart 
-                            selectedCoin={displayCoin} 
-                            candleData={candleData} 
-                        />
+                        <MainChart selectedCoin={displayCoin} />
                         <CryptoTable
                             cryptoData={displayData}
                             onSelectCoin={handleSelectCoin}

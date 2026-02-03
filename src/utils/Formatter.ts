@@ -1,8 +1,18 @@
 export default class Formatter {
-    static formatPrice(price: number | undefined | null): string {
+    static formatPrice(price: number | undefined | null, decimals: number = 2): string {
 
         if (price === undefined || price === null || isNaN(price)) {
             return '$0.00';
+        }
+
+        let decimalPlaces = decimals;
+        
+        if (price < 0.01) {
+            decimalPlaces = 6;
+        } else if (price < 1) {
+            decimalPlaces = 4;
+        } else if (price < 10) {
+            decimalPlaces = 3;
         }
 
         if (price >= 1000) {
@@ -12,15 +22,10 @@ export default class Formatter {
             })}`;
         }
         
-        if (price >= 1) {
-            return `$${price.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            })}`;
-        }
-        
-        // For very small prices (under $1)
-        return `$${price.toFixed(4)}`;
+        return `$${price.toLocaleString('en-US', {
+            minimumFractionDigits: decimalPlaces,
+            maximumFractionDigits: decimalPlaces
+        })}`;
     }
 
     static formatLargeNumber(num: number | undefined | null): string {
