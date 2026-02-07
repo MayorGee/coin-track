@@ -39,3 +39,42 @@
         gap: 1.5rem;
     }
 }
+
+/* ===== MOBILE LAYOUT OVERRIDES ===== */
+@media (max-width: 800px) {
+    .app {
+        &__main {
+            padding: 0.75rem !important;
+            max-width: 95vw !important;
+        }
+        
+        &__layout {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1rem !important;
+            margin: 0.5rem !important;
+            padding: 0 !important;
+        }
+        
+        &__left-column,
+        &__right-column {
+            width: 100% !important;
+            max-width: 100vw !important;
+            padding: 0 !important;
+        }
+    }
+}
+
+/* ===== EMERGENCY MOBILE FIX ===== */
+@media (max-width: 480px) {
+    body, html {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+    }
+    
+    #root, .app {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+}
