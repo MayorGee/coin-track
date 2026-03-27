@@ -17,6 +17,7 @@ const App = () =>  {
     const [cryptoData, setCryptoData] = useState<CryptoData[]>([]);
     const [selectedCoin, setSelectedCoin] = useState<CryptoData | null>(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [isChartFallback, setIsChartFallback] = useState(false);
     const [loading, setLoading] = useState(true);
     const [watchlist, setWatchlist] = useState<string[]>(
         () => LocalStorage.getItem<string[]>(
@@ -121,12 +122,13 @@ const App = () =>  {
     const displayData = cryptoData.length > 0 ? cryptoData : generateMockCryptoData();
     const displayCoin = selectedCoin || displayData[0];
     const marketStats = getMarketStats();
+    const showLiveStatus = isConnected && !isChartFallback;
     
     return (
         <div className="app">
             <Header 
                 marketStats={marketStats} 
-                isConnected={isConnected}
+                isConnected={showLiveStatus}
             />
 
             <TickerTape cryptoData={displayData.slice(0, 10)} />
@@ -135,7 +137,10 @@ const App = () =>  {
                 <div className="app__layout">
                     {/* Left Column - Main Chart */}
                     <div className="app__left-column">
-                        <MainChart selectedCoin={displayCoin} />
+                        <MainChart
+                            selectedCoin={displayCoin}
+                            onChartFallbackChange={setIsChartFallback}
+                        />
                         <CryptoTable
                             cryptoData={displayData}
                             onSelectCoin={handleSelectCoin}

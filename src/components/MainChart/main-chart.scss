@@ -281,6 +281,7 @@
     &__price-section {
         margin-bottom: 2rem;
         height: 350px;
+        position: relative;
 
         @include respond-to('small') {
             height: 150px !important;
@@ -293,6 +294,41 @@
             margin-bottom: 12rem !important;
         }
 
+    }
+
+    &__custom-price {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    &__custom-svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+    }
+
+    &__custom-tooltip {
+        position: absolute;
+        min-width: 170px;
+        background: rgba(17, 24, 39, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 0.6rem 0.75rem;
+        color: #fff;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        pointer-events: none;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        z-index: 3;
+    }
+
+    &__custom-tooltip-time {
+        color: #a0aec0;
+        margin-bottom: 0.3rem;
+        padding-bottom: 0.3rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     &__volume-section {

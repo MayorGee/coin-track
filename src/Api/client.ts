@@ -2,41 +2,78 @@ import axios from 'axios';
 import type { ApiCoin, CandleData, TimeFrame } from '../types/crypto';
 import Environment from '../Environment';
 
+export interface ChartDataResult {
+    candles: CandleData[];
+    isFallback: boolean;
+}
+
 export default class ApiClient {
     private apiKey: string | null;   
 
     constructor () {
-        this.apiKey = Environment.getCoingeckoApiKey() as string;
+        const rawKey = (Environment.getCoingeckoApiKey() || '').trim();
+        const isPlaceholder =
+            rawKey.length === 0 ||
+            rawKey.toLowerCase() === 'your_api_key' ||
+            rawKey.toLowerCase() === 'demo_api_key';
+        this.apiKey = isPlaceholder ? null : rawKey;
+    }
+
+    private getHeaders(includeApiKey = true): Record<string, string> {
+        const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+        };
+
+        if (includeApiKey && this.apiKey) {
+            headers['x-cg-demo-api-key'] = this.apiKey;
+        }
+
+        return headers;
+    }
+
+    private shouldRetryWithoutKey(error: unknown): boolean {
+        return Boolean(
+            this.apiKey &&
+            axios.isAxiosError(error) &&
+            error.response?.status === 401
+        );
+    }
+
+    private async getWithAuthRetry<T>(url: string, params: Record<string, string | number>): Promise<T> {
+        try {
+            const response = await axios.get<T>(url, {
+                params,
+                headers: this.getHeaders(true),
+            });
+            return response.data;
+        } catch (error) {
+            if (!this.shouldRetryWithoutKey(error)) {
+                throw error;
+            }
+
+            const response = await axios.get<T>(url, {
+                params,
+                headers: this.getHeaders(false),
+            });
+            return response.data;
+        }
     }
 
     private async fetchData(): Promise<ApiCoin[]> {
         try {
-            const headers: Record<string, string> = {
-                'Content-Type': 'application/json',
-            };
-
-            if (this.apiKey) {
-                headers['x-cg-demo-api-key'] = this.apiKey;
-            }
-
-            const response = await axios.get<ApiCoin[]>(
+            const data = await this.getWithAuthRetry<ApiCoin[]>(
                 'https://api.coingecko.com/api/v3/coins/markets',
                 {
-                    params: {
-                        vs_currency: 'usd',
-                        order: 'market_cap_desc',
-                        per_page: 20,
-                        page: 1,
-                        sparkline: false,
-                        price_change_percentage: '24h,7d'
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
+                    vs_currency: 'usd',
+                    order: 'market_cap_desc',
+                    per_page: 20,
+                    page: 1,
+                    sparkline: 'false',
+                    price_change_percentage: '24h,7d',
+                },
             );
 
-            return response.data;
+            return data;
         } catch (error: any) {
             console.error('API Error:', error.response?.status, error.message);
 
@@ -73,69 +110,199 @@ export default class ApiClient {
         }
     }
 
-    public async getChartData(coinId: string, timeFrame: TimeFrame): Promise<CandleData[]> {
+    public async getChartData(coinId: string, timeFrame: TimeFrame, fallbackBasePrice?: number): Promise<ChartDataResult> {
+        // Map timeframe to CoinGecko days parameter
+        const marketChartDaysMap: Record<TimeFrame, number | 'max'> = {
+            '1H': 7,      // 7 days -> denser intraday history
+            '4H': 30,     // 30 days
+            '1D': 180,    // ~6 months of daily candles
+            '1W': 'max',  // use full range, then aggregate
+            '1M': 'max',  // use full range, then aggregate
+        };
+        const ohlcDaysMap: Record<TimeFrame, number | null> = {
+            '1H': 7,
+            '4H': 30,
+            '1D': 180,
+            '1W': 365,
+            '1M': null, // skip OHLC for this range and use market_chart aggregation
+        };
+        const marketDays = marketChartDaysMap[timeFrame];
+        const ohlcDays = ohlcDaysMap[timeFrame];
+
         try {
-            // Map timeframe to CoinGecko days parameter
-            const timeFrameMap: Record<TimeFrame, number> = {
-                '1H': 1,    // 1 day  
-                '4H': 1,    
-                '1D': 7,    
-                '1W': 30,   
-                '1M': 90,   
-            };
+            if (ohlcDays !== null) {
+                const [ohlcData, marketChartData] = await Promise.all([
+                    this.getWithAuthRetry<any>(
+                        `https://api.coingecko.com/api/v3/coins/${coinId}/ohlc`,
+                        {
+                            vs_currency: 'usd',
+                            days: ohlcDays,
+                        }
+                    ),
+                    this.getWithAuthRetry<any>(
+                        `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart`,
+                        {
+                            vs_currency: 'usd',
+                            days: marketDays,
+                        }
+                    ),
+                ]);
 
-            const days = timeFrameMap[timeFrame];
-            
-            const headers: Record<string, string> = {
-                'Content-Type': 'application/json',
-            };
-
-            if (this.apiKey) {
-                headers['x-cg-demo-api-key'] = this.apiKey;
+                // Use real OHLC candles and align volume from market_chart
+                return {
+                    candles: this.transformAndAggregateChartData(
+                        ohlcData,
+                        marketChartData?.total_volumes || [],
+                        timeFrame
+                    ),
+                    isFallback: false,
+                };
             }
 
-            const response = await axios.get<any>(
+            const marketChartData = await this.getWithAuthRetry<any>(
                 `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart`,
                 {
-                    params: {
-                        vs_currency: 'usd',
-                        days: days,
-                    },
-                    headers,
+                    vs_currency: 'usd',
+                    days: marketDays,
                 }
             );
 
-            // Transform CoinGecko response to our CandleData format
-            return this.transformAndAggregateChartData(response.data, timeFrame);
+            return {
+                candles: this.transformMarketChartToCandles(marketChartData, timeFrame),
+                isFallback: false,
+            };
             
         } catch (error) {
-            console.error('Chart API Error:', error);
-            return this.generateMockChartData(timeFrame);
+            console.error('Chart API Error (OHLC path):', error);
+
+            // Fallback to market_chart aggregation when OHLC endpoint fails or is unavailable.
+            try {
+                const marketChartData = await this.getWithAuthRetry<any>(
+                    `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart`,
+                    {
+                        vs_currency: 'usd',
+                        days: marketDays,
+                    }
+                );
+
+                return {
+                    candles: this.transformMarketChartToCandles(marketChartData, timeFrame),
+                    isFallback: false,
+                };
+            } catch (marketError) {
+                console.error('Chart API Error (market_chart fallback):', marketError);
+                // Last-resort fallback for UI continuity when API access is unavailable.
+                return {
+                    candles: this.generateMockChartData(timeFrame, fallbackBasePrice),
+                    isFallback: true,
+                };
+            }
         }
     }
 
-    private transformAndAggregateChartData(apiData: any, timeFrame: TimeFrame): CandleData[] {
-        const prices = apiData.prices || [];
-        const volumes = apiData.total_volumes || [];
+    private transformAndAggregateChartData(ohlcData: any, totalVolumes: any[], timeFrame: TimeFrame): CandleData[] {
+        const ohlcRows = Array.isArray(ohlcData) ? ohlcData : [];
+        const volumes = Array.isArray(totalVolumes) ? totalVolumes : [];
         
         let candles: CandleData[] = [];
         
-        // Create minute/hourly candles from API data
-        for (let i = 0; i < prices.length; i++) {
-            const [timestamp, price] = prices[i];
-            const volume = volumes[i] ? volumes[i][1] : 0;
-            
+        // Create candles directly from CoinGecko OHLC endpoint data:
+        // [timestamp, open, high, low, close]
+        for (const row of ohlcRows) {
+            if (!Array.isArray(row) || row.length < 5) continue;
+            const [timestamp, open, high, low, close] = row;
+            const volume = this.findNearestVolume(volumes, Number(timestamp));
+
             candles.push({
                 time: new Date(timestamp).toISOString(),
-                open: price,
-                high: price,
-                low: price,
-                close: price,
-                volume: volume
+                open: Number(open) || 0,
+                high: Number(high) || 0,
+                low: Number(low) || 0,
+                close: Number(close) || 0,
+                volume,
             });
         }
         
         // Aggregate based on timeframe
+        return this.aggregateToTimeFrame(candles, timeFrame);
+    }
+
+    private findNearestVolume(volumes: any[], targetTimestamp: number): number {
+        if (!Array.isArray(volumes) || volumes.length === 0) return 0;
+
+        let nearest = volumes[0];
+        let nearestDiff = Math.abs(Number(nearest[0]) - targetTimestamp);
+
+        for (let i = 1; i < volumes.length; i++) {
+            const diff = Math.abs(Number(volumes[i][0]) - targetTimestamp);
+            if (diff < nearestDiff) {
+                nearest = volumes[i];
+                nearestDiff = diff;
+            }
+        }
+
+        return Number(nearest[1]) || 0;
+    }
+
+    private transformMarketChartToCandles(apiData: any, timeFrame: TimeFrame): CandleData[] {
+        const prices = Array.isArray(apiData?.prices) ? apiData.prices : [];
+        const totalVolumes = Array.isArray(apiData?.total_volumes) ? apiData.total_volumes : [];
+        if (prices.length === 0) return [];
+
+        const bucketMinutes = {
+            '1H': 60,
+            '4H': 240,
+            '1D': 1440,
+            '1W': 10080,
+            '1M': 43200,
+        }[timeFrame];
+        const bucketMs = bucketMinutes * 60 * 1000;
+
+        const bucketMap = new Map<number, { prices: number[]; volume: number }>();
+
+        for (const priceRow of prices) {
+            if (!Array.isArray(priceRow) || priceRow.length < 2) continue;
+            const timestamp = Number(priceRow[0]);
+            const price = Number(priceRow[1]);
+            if (!Number.isFinite(timestamp) || !Number.isFinite(price)) continue;
+
+            const bucketStart = Math.floor(timestamp / bucketMs) * bucketMs;
+            const existing = bucketMap.get(bucketStart) || { prices: [], volume: 0 };
+            existing.prices.push(price);
+            bucketMap.set(bucketStart, existing);
+        }
+
+        for (const volumeRow of totalVolumes) {
+            if (!Array.isArray(volumeRow) || volumeRow.length < 2) continue;
+            const timestamp = Number(volumeRow[0]);
+            const volume = Number(volumeRow[1]);
+            if (!Number.isFinite(timestamp) || !Number.isFinite(volume)) continue;
+
+            const bucketStart = Math.floor(timestamp / bucketMs) * bucketMs;
+            const existing = bucketMap.get(bucketStart);
+            if (existing) {
+                existing.volume += volume;
+            }
+        }
+
+        const candles = Array.from(bucketMap.entries())
+            .sort((a, b) => a[0] - b[0])
+            .map(([bucketStart, bucket]) => {
+                const first = bucket.prices[0];
+                const last = bucket.prices[bucket.prices.length - 1];
+                const high = Math.max(...bucket.prices);
+                const low = Math.min(...bucket.prices);
+
+                return {
+                    time: new Date(bucketStart).toISOString(),
+                    open: first,
+                    high,
+                    low,
+                    close: last,
+                    volume: bucket.volume,
+                };
+            });
+
         return this.aggregateToTimeFrame(candles, timeFrame);
     }
     
@@ -148,46 +315,29 @@ export default class ApiClient {
         
         // Determine aggregation parameters based on timeframe
         const aggregationConfig = {
-            '1H': { minutes: 60, maxPoints: 24 },      // 24 hours of 1-hour candles
-            '4H': { minutes: 240, maxPoints: 42 },     // 7 days of 4-hour candles (42 periods)
-            '1D': { minutes: 1440, maxPoints: 30 },    // 30 days of daily candles
-            '1W': { minutes: 10080, maxPoints: 12 },   // 12 weeks
-            '1M': { minutes: 43200, maxPoints: 12 },   // 12 months
+            '1H': { minutes: 60, maxPoints: 120 },      // up to 5 days of 1h candles
+            '4H': { minutes: 240, maxPoints: 120 },     // up to 20 days of 4h candles
+            '1D': { minutes: 1440, maxPoints: 180 },    // up to ~6 months daily
+            '1W': { minutes: 10080, maxPoints: 156 },   // up to ~3 years weekly
+            '1M': { minutes: 43200, maxPoints: 120 },   // up to 10 years monthly
         };
         
         const config = aggregationConfig[timeFrame];
-        const aggregated: CandleData[] = [];
-        
-        // Group candles by time period
-        let currentGroup: CandleData[] = [];
-        let groupStartTime: Date | null = null;
-        
+        const bucketMs = config.minutes * 60 * 1000;
+        const buckets = new Map<number, CandleData[]>();
+
+        // Bucket candles by fixed interval boundaries to keep consistent OHLC grouping.
         for (const candle of candles) {
-            const candleTime = new Date(candle.time);
-            
-            if (!groupStartTime) {
-                groupStartTime = candleTime;
-                currentGroup = [candle];
-            } else {
-                const minutesDiff = (candleTime.getTime() - groupStartTime.getTime()) / (1000 * 60);
-                
-                if (minutesDiff < config.minutes) {
-                    currentGroup.push(candle);
-                } else {
-                    // Aggregate the completed group
-                    aggregated.push(this.aggregateCandleGroup(currentGroup, groupStartTime));
-                    
-                    // Start new group
-                    groupStartTime = candleTime;
-                    currentGroup = [candle];
-                }
-            }
+            const ts = new Date(candle.time).getTime();
+            const bucketStart = Math.floor(ts / bucketMs) * bucketMs;
+            const group = buckets.get(bucketStart) || [];
+            group.push(candle);
+            buckets.set(bucketStart, group);
         }
-        
-        // Add last group if exists
-        if (currentGroup.length > 0 && groupStartTime) {
-            aggregated.push(this.aggregateCandleGroup(currentGroup, groupStartTime));
-        }
+
+        const aggregated = Array.from(buckets.entries())
+            .sort((a, b) => a[0] - b[0])
+            .map(([bucketStart, group]) => this.aggregateCandleGroup(group, new Date(bucketStart)));
         
         // Limit to max points and ensure we have the most recent data
         return aggregated.slice(-config.maxPoints);
@@ -216,50 +366,57 @@ export default class ApiClient {
         };
     }
 
-    private generateMockChartData(timeFrame: TimeFrame): CandleData[] {
-        const basePrice = 50000; // Example base price
-        const candles: CandleData[] = [];
-        const now = new Date();
-        
+    private generateMockChartData(timeFrame: TimeFrame, basePriceHint?: number): CandleData[] {
         const periods = {
-            '1H': 24,   // 24 hours
-            '4H': 24,   // 6 four-hour periods
-            '1D': 30,   // 30 days
-            '1W': 12,   // 12 weeks
-            '1M': 12    // 12 months
+            '1H': 120,
+            '4H': 120,
+            '1D': 180,
+            '1W': 156,
+            '1M': 120,
         };
-        
+        const timeframeMs = {
+            '1H': 60 * 60 * 1000,
+            '4H': 4 * 60 * 60 * 1000,
+            '1D': 24 * 60 * 60 * 1000,
+            '1W': 7 * 24 * 60 * 60 * 1000,
+            '1M': 30 * 24 * 60 * 60 * 1000,
+        };
+
         const count = periods[timeFrame];
-        
+        const stepMs = timeframeMs[timeFrame];
+        const now = Date.now();
+        const candles: CandleData[] = [];
+
+        const normalizedBase =
+            typeof basePriceHint === 'number' && Number.isFinite(basePriceHint) && basePriceHint > 0
+                ? basePriceHint
+                : 45000 + Math.random() * 10000;
+        let lastClose = normalizedBase;
+        const volatility = timeFrame === '1H' || timeFrame === '4H' ? 0.01 : 0.018;
+
         for (let i = count - 1; i >= 0; i--) {
-            const time = new Date(now);
-            
-            // Set time based on timeframe
-            if (timeFrame === '1H') {
-                time.setHours(now.getHours() - i);
-            } else if (timeFrame === '4H') {
-                time.setHours(now.getHours() - (i * 4));
-            } else if (timeFrame === '1D') {
-                time.setDate(now.getDate() - i);
-            } else if (timeFrame === '1W') {
-                time.setDate(now.getDate() - (i * 7));
-            } else { // 1M
-                time.setMonth(now.getMonth() - i);
-            }
-            
-            const priceChange = (Math.random() - 0.5) * 0.1; // ±5% change
-            const price = basePrice * (1 + priceChange);
-            
+            const timestamp = now - i * stepMs;
+            const open = lastClose;
+            const drift = (Math.random() - 0.5) * volatility * 2;
+            const close = open * (1 + drift);
+            const wickUp = Math.random() * volatility * 0.9;
+            const wickDown = Math.random() * volatility * 0.9;
+            const high = Math.max(open, close) * (1 + wickUp);
+            const low = Math.min(open, close) * (1 - wickDown);
+
             candles.push({
-                time: time.toISOString(),
-                open: price * 0.99,
-                high: price * 1.02,
-                low: price * 0.98,
-                close: price,
-                volume: Math.random() * 1000000 + 500000
+                time: new Date(timestamp).toISOString(),
+                open,
+                high,
+                low,
+                close,
+                volume: 250000 + Math.random() * 5000000,
             });
+
+            lastClose = close;
         }
-        
-        return candles.reverse();
+
+        return candles;
     }
+
 }

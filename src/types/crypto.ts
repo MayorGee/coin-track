@@ -56,6 +56,7 @@ export interface HeaderProps {
 
 export interface MainChartProps {
     selectedCoin: CryptoData;
+    onChartFallbackChange?: (isFallback: boolean) => void;
 }
 
 export interface CoinStatsProps {
